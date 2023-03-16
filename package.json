@@ -1,0 +1,17 @@
+{
+  "name": "php-date",
+  "version": "1.0.0",
+  "description": "A WASM PHP app for getting PHP Date Format help",
+  "main": "index.html",
+  "license": "MIT",
+  "dependencies": {
+    "php-wasm": "^0.0.5"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "scripts": {
+    "start": "http-server ./public",
+    "postinstall": "cp node_modules/php-wasm/php-web.* public/"
+  }
+}

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHP DateTime Cookbook</title>
+
+    <link rel="icon" type="image/svg+xml" sizes="any" href="https://www.php.net/favicon.svg?v=2">
+    <link rel="icon" type="image/png" sizes="196x196" href="https://www.php.net/favicon-196x196.png?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://www.php.net/favicon-32x32.png?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://www.php.net/favicon-16x16.png?v=2">
+    <link rel="shortcut icon" href="https://www.php.net/favicon.ico?v=2">
+
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
+    <link rel="stylesheet" href="/main.css">
+
+    <link rel="preload" href="/build/php-web.js" as="script" />
+    <script src="/build/php-web.js" preload></script>
+  </head>
+  <body>
+    <main>
+      <h1>PHP DateTime Cookbook</h1>
+      <form>
+        <div class="form-contents">
+          <h2>Sandbox</h2>
+          <div class="field field-source">
+            <label>Date Source</label>
+            <input type="radio" name="sourceDT" id="customDT" value="custom">
+            <label for="customDT">Custom</label>
+            <input type="radio" name="sourceDT" id="nowDT" value="now" checked>
+            <label for="nowDT">Now</label>
+          </div>
+          <div class="field field-format">
+            <label for="format">Format</label>
+            <input type="text" name="format" id="format" value="F jS, o (g:i A)">
+          </div>
+          <div class="field field-date">
+            <label for="date">Date</label>
+            <input type="date" name="date" id="date" readonly>
+          </div>
+          <div class="field field-time">
+            <label for="time">Time</label>
+            <input type="time" name="time" id="time" readonly>
+          </div>
+          <div class="field field-output">
+            <label for="output">Output</label>
+            <input type="text" name="output" id="output" readonly>
+          </div>
+        </div>
+      </form>
+      <div class="shadow-hider"></div>
+      <h2>Cheat Sheet</h2>
+
+      <details open>
+        <summary>
+          <h3>Day</h3>
+        </summary>
+        <table>
+          <thead>
+            <tr>
+              <th>Character</th>
+              <th>Description</th>
+              <th>Examples</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>d</code>
+              </td>
+              <td>Day of the month, 2 digits with leading zeros</td>
+              <td>
+                <code>01</code> to <code>31</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>D</code>
+              </td>
+              <td>A textual representation of a day, three letters</td>
+              <td>
+                <code>Mon</code> through <code>Sun</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>j</code>
+              </td>
+              <td>Day of the month without leading zeros</td>
+              <td>
+                <code>1</code> to <code>31</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>l</code> (lowercase 'L')
+              </td>
+              <td>A full textual representation of the day of the week</td>
+              <td>
+                <code>Sunday</code> through <code>Saturday</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>N</code>
+              </td>
+              <td>ISO 8601 numeric representation of the day of the week</td>
+              <td>
+                <code>1</code> (for Monday) through <code>7</code> (for Sunday)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>S</code>
+              </td>
+              <td>English ordinal suffix for the day of the month, 2 characters</td>
+              <td>
+                <code>st</code>, <code>nd</code>, <code>rd</code> or <code>th</code>. Works well with <code>j</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>w</code>
+              </td>
+              <td>Numeric representation of the day of the week</td>
+              <td>
+                <code>0</code> (for Sunday) through <code>6</code> (for Saturday)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>z</code>
+              </td>
+              <td>The day of the year (starting from 0)</td>
+              <td>
+                <code>0</code> through <code>365</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details open>
+        <summary>
+          <h3>Week</h3>
+        </summary>
+        <table>
+          <thead>
+            <tr>
+              <th>Character</th>
+              <th>Description</th>
+              <th>Examples</th>
+            </tr>
+          </thead>
+          <tr>
+            <td>
+              <code>W</code>
+            </td>
+            <td>ISO 8601 week number of year, weeks starting on Monday</td>
+            <td>Example: <code>42</code> (the 42nd week in the year) </td>
+          </tr>
+          <tbody></tbody>
+        </table>
+      </details>
+
+      <details open>
+        <summary>
+          <h3>Month</h3>
+        </summary>
+        <table>
+          <thead>
+            <tr>
+              <th>Character</th>
+              <th>Description</th>
+              <th>Examples</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>F</code>
+              </td>
+              <td>A full textual representation of a month, such as January or March</td>
+              <td>
+                <code>January</code> through <code>December</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>m</code>
+              </td>
+              <td>Numeric representation of a month, with leading zeros</td>
+              <td>
+                <code>01</code> through <code>12</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>M</code>
+              </td>
+              <td>A short textual representation of a month, three letters</td>
+              <td>
+                <code>Jan</code> through <code>Dec</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>n</code>
+              </td>
+              <td>Numeric representation of a month, without leading zeros</td>
+              <td>
+                <code>1</code> through <code>12</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>t</code>
+              </td>
+              <td>Number of days in the given month</td>
+              <td>
+                <code>28</code> through <code>31</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details open>
+        <summary>
+          <h3>Year</h3>
+        </summary>
+        <table>
+          <thead>
+            <tr>
+              <th>Character</th>
+              <th>Description</th>
+              <th>Examples</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>L</code>
+              </td>
+              <td>Whether it's a leap year</td>
+              <td>
+                <code>1</code> if it is a leap year, <code>0</code> otherwise.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>o</code>
+              </td>
+              <td>ISO 8601 week-numbering year. This has the same value as <code>Y</code>, except that if the ISO week number ( <code>W</code>) belongs to the previous or next year, that year is used instead. </td>
+              <td>Examples: <code>1999</code> or <code>2003</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>X</code>
+              </td>
+              <td>An expanded full numeric representation of a year, at least 4 digits, with <code>-</code> for years BCE, and <code>+</code> for years CE. </td>
+              <td>Examples: <code>-0055</code>, <code>+0787</code>, <code>+1999</code>, <code>+10191</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>x</code>
+              </td>
+              <td>An expanded full numeric representation if requried, or a standard full numeral representation if possible (like <code>Y</code>). At least four digits. Years BCE are prefixed with a <code>-</code>. Years beyond (and including) <code>10000</code> are prefixed by a <code>+</code>. </td>
+              <td>Examples: <code>-0055</code>, <code>0787</code>, <code>1999</code>, <code>+10191</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>Y</code>
+              </td>
+              <td>A full numeric representation of a year, at least 4 digits, with <code>-</code> for years BCE. </td>
+              <td>Examples: <code>-0055</code>, <code>0787</code>, <code>1999</code>, <code>2003</code>, <code>10191</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>y</code>
+              </td>
+              <td>A two digit representation of a year</td>
+              <td>Examples: <code>99</code> or <code>03</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details open>
+        <summary>
+          <h3>Time</h3>
+        </summary>
+        <table>
+          <thead>
+            <tr>
+              <th>Character</th>
+              <th>Description</th>
+              <th>Examples</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>a</code>
+              </td>
+              <td>Lowercase Ante meridiem and Post meridiem</td>
+              <td>
+                <code>am</code> or <code>pm</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>A</code>
+              </td>
+              <td>Uppercase Ante meridiem and Post meridiem</td>
+              <td>
+                <code>AM</code> or <code>PM</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>B</code>
+              </td>
+              <td>Swatch Internet time</td>
+              <td>
+                <code>000</code> through <code>999</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>g</code>
+              </td>
+              <td>12-hour format of an hour without leading zeros</td>
+              <td>
+                <code>1</code> through <code>12</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>G</code>
+              </td>
+              <td>24-hour format of an hour without leading zeros</td>
+              <td>
+                <code>0</code> through <code>23</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>h</code>
+              </td>
+              <td>12-hour format of an hour with leading zeros</td>
+              <td>
+                <code>01</code> through <code>12</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>H</code>
+              </td>
+              <td>24-hour format of an hour with leading zeros</td>
+              <td>
+                <code>00</code> through <code>23</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>i</code>
+              </td>
+              <td>Minutes with leading zeros</td>
+              <td>
+                <code>00</code> to <code>59</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>s</code>
+              </td>
+              <td>Seconds with leading zeros</td>
+              <td>
+                <code>00</code> through <code>59</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>u</code>
+              </td>
+              <td> Microseconds. Note that <span class="function">
+                  <a href="function.date.php" class="function">date()</a>
+                </span> will always generate <code>000000</code> since it takes an <span class="type">int</span> parameter, whereas <span class="methodname">
+                  <strong>DateTime::format()</strong>
+                </span> does support microseconds if <span class="classname">
+                  <a href="class.datetime.php" class="classname">DateTime</a>
+                </span> was created with microseconds. </td>
+              <td>Example: <code>654321</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>v</code>
+              </td>
+              <td> Milliseconds. Same note applies as for <code>u</code>. </td>
+              <td>Example: <code>654</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details open>
+        <summary>
+          <h3>Timezone</h3>
+        </summary>
+        <table>
+          <thead>
+            <tr>
+              <th>Character</th>
+              <th>Description</th>
+              <th>Examples</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>e</code>
+              </td>
+              <td>Timezone identifier</td>
+              <td>Examples: <code>UTC</code>, <code>GMT</code>, <code>Atlantic/Azores</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>I</code> (capital i)
+              </td>
+              <td>Whether or not the date is in daylight saving time</td>
+              <td>
+                <code>1</code> if Daylight Saving Time, <code>0</code> otherwise.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>O</code>
+              </td>
+              <td>Difference to Greenwich time (GMT) without colon between hours and minutes</td>
+              <td>Example: <code>+0200</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>P</code>
+              </td>
+              <td>Difference to Greenwich time (GMT) with colon between hours and minutes</td>
+              <td>Example: <code>+02:00</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>p</code>
+              </td>
+              <td> The same as <code>P</code>, but returns <code>Z</code> instead of <code>+00:00</code> (available as of PHP 8.0.0) </td>
+              <td>Examples: <code>Z</code> or <code>+02:00</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>T</code>
+              </td>
+              <td>Timezone abbreviation, if known; otherwise the GMT offset.</td>
+              <td>Examples: <code>EST</code>, <code>MDT</code>, <code>+05</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>Z</code>
+              </td>
+              <td>Timezone offset in seconds. The offset for timezones west of UTC is always negative, and for those east of UTC is always positive.</td>
+              <td>
+                <code>-43200</code> through <code>50400</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details open>
+        <summary>
+          <h3>Full Date/Time</h3>
+        </summary>
+        <table>
+          <thead>
+            <tr>
+              <th>Character</th>
+              <th>Description</th>
+              <th>Examples</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>c</code>
+              </td>
+              <td>ISO 8601 date</td>
+              <td>2004-02-12T15:19:21+00:00</td>
+            </tr>
+            <tr>
+              <td>
+                <code>r</code>
+              </td>
+              <td>
+                <a href="http://www.faqs.org/rfcs/rfc2822" class="link external">»&nbsp;RFC 2822</a>/ <a href="http://www.faqs.org/rfcs/rfc5322" class="link external">»&nbsp;RFC 5322</a> formatted date
+              </td>
+              <td>Example: <code>Thu, 21 Dec 2000 16:01:07 +0200</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>U</code>
+              </td>
+              <td>Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)</td>
+              <td>See also <span class="function">
+                  <a href="function.time.php" class="function">time()</a>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </details>
+    </main>
+    <script src="/main.js"></script>
+  </body>
+</html>
