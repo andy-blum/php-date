@@ -36,11 +36,26 @@ form {
   border: none;
   width: calc(100% + 2rem);
   max-width: none;
-  box-shadow: 0 3px 3px var(--color-shadow);
+  box-shadow: 0 3px 0 transparent;
   border-radius: 0;
   margin-inline-start: -1rem;
   padding: 0.5rem 0;
   background-color: var(--color-bg-secondary);
+  transition: 0.25s box-shadow ease-in-out;
+}
+
+input:where([type="date"], [type="time"]) {
+  min-width: 125px;
+}
+
+form.disabled {
+  pointer-events: none;
+  position: static;
+  opacity: 0.3
+}
+
+form.is-stuck:not(.disabled) {
+  box-shadow: 0 3px 3px var(--color-shadow);
 }
 
 .form-contents {
@@ -61,6 +76,10 @@ form {
 
 .form-contents .field-source {
   flex-shrink: 0;
+  flex-basis: 100%;
+}
+
+.form-contents .field-output {
   flex-basis: 100%;
 }
 

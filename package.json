@@ -11,7 +11,7 @@
     "http-server": "^14.1.1"
   },
   "scripts": {
-    "start": "http-server",
+    "start": "http-server ../",
     "postinstall": "cp node_modules/php-wasm/php-web.* public/"
   }
 }

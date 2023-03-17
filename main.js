@@ -11,7 +11,6 @@ Module({
   print(data) {
     if (data) {
       clearTimeout(timer);
-      console.log('DATA');
 
       stdout = `${stdout}${data}`;
 
@@ -33,17 +32,35 @@ Module({
   const version = ccall('pib_exec', STR, [STR], [`phpversion();`]);
   console.log('PHP VERSION: ', version);
 
-  const fields = document.querySelector('form').elements;
+  const loadingAlert = document.querySelector('.loading');
+  const form = document.querySelector('form')
+  const fields = form.elements;
   const {
     sourceDT,
     date,
     time,
     format,
     output,
+    customDT,
+    nowDT,
   } = fields;
 
+  loadingAlert.remove();
+  form.classList.remove('disabled');
+
+  const intObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const isStuck = entry.intersectionRatio < 1
+      form.classList.toggle('is-stuck', isStuck);
+    })
+  }, {
+    rootMargin: "-1px 100% 100% 100%",
+    threshold: [0.99999, 1],
+  });
+
+  intObs.observe(form);
+
   const updateOnInput = () => {
-    console.log('input!');
     if (date.value && time.value && format.value) {
       const php = `(new DateTimeImmutable('${date.value} ${time.value}'))->format('${format.value}');`;
       const formatted = ccall('pib_exec', STR, [STR], [php]);
@@ -68,7 +85,17 @@ Module({
   time.addEventListener('input', updateOnInput);
   format.addEventListener('input', updateOnInput);
 
+  customDT.addEventListener('input', () => {
+    date.value = '';
+    date.removeAttribute('readonly');
 
-  const formatted = ccall('pib_exec', STR, [STR], [`(new DateTimeImmutable('2000-01-01'))->format('Y-m-d H:i:s');`]);
-  console.log('FORMATTED: ', formatted);
+    time.value = '';
+    time.removeAttribute('readonly');
+  });
+
+  nowDT.addEventListener('input', () => {
+    date.setAttribute('readonly', '');
+
+    time.setAttribute('readonly', '')
+  })
 })
