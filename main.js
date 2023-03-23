@@ -71,10 +71,8 @@ Module({
   setInterval(() => {
     if (sourceDT.value === 'now') {
       const now = new Date()
-      const [nowDate, nowTime] = now.toISOString()
-        .replace('Z', '')
-        .split('.')[0]
-        .split('T')
+      const nowDate = now.toISOString().split('T')[0]
+      const nowTime = now.toTimeString().split(' ')[0]
       date.value = nowDate;
       time.value = nowTime;
       updateOnInput();

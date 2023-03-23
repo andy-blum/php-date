@@ -23,10 +23,22 @@ body {
   --width-content: 1080px;
 }
 
+.header {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 1rem 0;
+}
+
 main {
   margin-block: 3rem;
   padding-block: 1px 1rem;
   background-color: var(--color-bg-secondary);
+}
+
+h1 {
+  margin: 0;
 }
 
 form {
